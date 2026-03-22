@@ -1,14 +1,14 @@
--- lua/plugins/completion.lua
 return {
-  -- Completion Engine (nvim-cmp)
   {
     "hrsh7th/nvim-cmp",
-    event = "InsertEnter",
+    lazy = false,
+    event = {},
+    priority = 100,
     dependencies = {
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
-      "kristijanhusak/vim-dadbod-completion", -- moved here so it loads with cmp
+      "kristijanhusak/vim-dadbod-completion",
       {
         "L3MON4D3/LuaSnip",
         version = "v2.*",
@@ -22,12 +22,11 @@ return {
     config = function()
       local cmp = require("cmp")
       local luasnip = require("luasnip")
+      local compare = require("cmp.config.compare")
 
       if pcall(require, "luasnip.loaders.from_vscode") then
         require("luasnip.loaders.from_vscode").lazy_load()
       end
-
-      local compare = require("cmp.config.compare")
 
       cmp.setup({
         snippet = {
@@ -119,16 +118,15 @@ return {
             compare.offset,
             compare.exact,
             compare.score,
+            compare.recently_used,
             compare.kind,
             compare.sort_text,
             compare.length,
             compare.order,
-            compare.recently_used,
           },
         },
       })
 
-      -- SQL filetype: use dadbod completion source
       vim.api.nvim_create_autocmd("FileType", {
         pattern = { "sql", "mysql", "plsql" },
         callback = function()
@@ -142,8 +140,5 @@ return {
         end,
       })
     end,
-  },
-  {
-    "L3MON4D3/LuaSnip",
   },
 }

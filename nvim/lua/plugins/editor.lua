@@ -5,8 +5,7 @@ return {
     opts = {},
   },
   {
-    "telescope.nvim",
-    priority = 1000,
+    "nvim-telescope/telescope.nvim",
     dependencies = {
       {
         "nvim-telescope/telescope-fzf-native.nvim",
@@ -63,8 +62,7 @@ return {
       {
         "sf",
         function()
-          local telescope = require("telescope")
-          telescope.extensions.file_browser.file_browser({
+          require("telescope").extensions.file_browser.file_browser({
             path = "%:p:h",
             cwd = vim.fn.expand("%:p:h"),
             respect_gitignore = false,
@@ -81,7 +79,6 @@ return {
     config = function(_, opts)
       local telescope = require("telescope")
       local actions = require("telescope.actions")
-      local fb_actions = telescope.extensions.file_browser.actions
 
       opts.defaults = vim.tbl_deep_extend("force", opts.defaults or {}, {
         wrap_results = true,
@@ -110,22 +107,10 @@ return {
           hijack_netrw = true,
           mappings = {
             i = {
-              ["<CR>"] = require("telescope.actions").select_tab,
+              ["<CR>"] = actions.select_tab,
             },
             n = {
-              ["<CR>"] = require("telescope.actions").select_tab,
-              ["N"] = fb_actions.create,
-              ["h"] = fb_actions.goto_parent_dir,
-              ["<C-u>"] = function(prompt_bufnr)
-                for _ = 1, 10 do
-                  actions.move_selection_previous(prompt_bufnr)
-                end
-              end,
-              ["<C-d>"] = function(prompt_bufnr)
-                for _ = 1, 10 do
-                  actions.move_selection_next(prompt_bufnr)
-                end
-              end,
+              ["<CR>"] = actions.select_tab,
             },
           },
         },
@@ -134,6 +119,24 @@ return {
       telescope.setup(opts)
       telescope.load_extension("fzf")
       telescope.load_extension("file_browser")
+
+      -- fixed: fb_actions accessed only after load_extension is called
+      local fb_actions = telescope.extensions.file_browser.actions
+
+      -- patch the normal-mode file_browser mappings post-setup
+      local fb_mappings = opts.extensions.file_browser.mappings.n
+      fb_mappings["N"] = fb_actions.create
+      fb_mappings["h"] = fb_actions.goto_parent_dir
+      fb_mappings["<C-u>"] = function(prompt_bufnr)
+        for _ = 1, 10 do
+          actions.move_selection_previous(prompt_bufnr)
+        end
+      end
+      fb_mappings["<C-d>"] = function(prompt_bufnr)
+        for _ = 1, 10 do
+          actions.move_selection_next(prompt_bufnr)
+        end
+      end
     end,
   },
 }

@@ -2,6 +2,11 @@ local keymap = vim.keymap
 local opts = { noremap = true, silent = true }
 
 -- Save / quit
+-- Select all
+keymap.set("n", "<Leader>a", "ggVG", opts)
+
+-- Save / quit
+keymap.set("n", "<Leader>w", ":update<CR>", opts)
 keymap.set("n", "<Leader>q", ":quit<CR>", opts)
 keymap.set("n", "<Leader>Q", ":wqa<CR>", opts)
 

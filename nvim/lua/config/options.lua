@@ -4,6 +4,7 @@
 --
 
 vim.env.GOPATH = vim.fn.expand("~/go")
+vim.env.GOPATH = vim.fn.expand("~/go") -- Your GOPATH
 vim.env.PATH = vim.env.GOPATH .. "/bin:" .. vim.env.PATH
 vim.env.PATH = "/usr/local/go/bin:" .. vim.env.PATH -- Go's bin directory
 

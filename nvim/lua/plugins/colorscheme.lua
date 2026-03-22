@@ -1,6 +1,8 @@
 return {
   {
     "Mofiqul/dracula.nvim",
+    lazy = false, -- load at startup to avoid default colorscheme flash on startup.
+    priority = 1000,
     config = function()
       local dracula = require("dracula")
       dracula.setup({
@@ -30,8 +32,19 @@ return {
           white = "#ABB2BF",
           black = "#191A21",
         },
+        show_end_of_buffer = false,
         transparent_bg = true,
+        lualine_bg_color = "#44475A",
         italic_comment = true,
+        overrides = function(colors)
+          return {
+            NormalFloat = { bg = "NONE" },
+            FloatBorder = { fg = colors.purple, bg = "NONE" },
+            SignColumn = { bg = "NONE" },
+            TelescopeNormal = { bg = "NONE" },
+            TelescopeBorder = { fg = colors.purple, bg = "NONE" },
+          }
+        end,
       })
     end,
   },

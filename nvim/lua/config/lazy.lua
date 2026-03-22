@@ -1,5 +1,6 @@
 -- Load environment variables and options FIRST
 require("config.options")
+require("config.options") -- Adjust path if needed (e.g., "myconfig.options")
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -36,6 +37,7 @@ require("lazy").setup({
         direction = "float",
         size = 40,
         open_mapping = [[<C-\>]],
+        open_mapping = [[<c-\>]],
       },
       {
         "dnlhc/glance.nvim",
